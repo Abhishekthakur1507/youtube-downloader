@@ -4,11 +4,31 @@ import os
 
 app = Flask(__name__)
 
-# ---------------- WINDOWS DOWNLOADS FOLDER ----------------
+# ---------------- BASE DIRECTORY ----------------
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+# ---------------- COOKIES FILE ----------------
+
+COOKIE_FILE = os.path.join(
+    BASE_DIR,
+    "cookies.txt"
+)
+
+# ---------------- DOWNLOAD FOLDER ----------------
 
 DOWNLOAD_FOLDER = os.path.join(
-    os.path.expanduser("~"),
-    "Downloads"
+    BASE_DIR,
+    "downloads"
+)
+
+# CREATE DOWNLOADS FOLDER
+
+os.makedirs(
+    DOWNLOAD_FOLDER,
+    exist_ok=True
 )
 
 # ---------------- HOME PAGE ----------------
@@ -17,7 +37,7 @@ DOWNLOAD_FOLDER = os.path.join(
 def home():
 
     return send_from_directory(
-        ".",
+        BASE_DIR,
         "index.html"
     )
 
@@ -27,7 +47,7 @@ def home():
 def style():
 
     return send_from_directory(
-        ".",
+        BASE_DIR,
         "style.css"
     )
 
@@ -43,6 +63,8 @@ def download():
         url = data.get("url")
 
         quality = data.get("quality")
+
+        # ---------------- VALIDATION ----------------
 
         if not url:
 
@@ -87,10 +109,13 @@ def download():
 
         options = {
 
-            # BEST QUALITY FORMAT
+            # VIDEO QUALITY
             "format": selected_format,
 
-            # SAFE WINDOWS FILENAMES
+            # USE YOUTUBE COOKIES
+            "cookiefile": COOKIE_FILE,
+
+            # SAFE WINDOWS FILES
             "windowsfilenames": True,
 
             "restrictfilenames": True,
@@ -101,7 +126,7 @@ def download():
                 "%(title)s_%(resolution)s.%(ext)s"
             ),
 
-            # FORCE MP4 OUTPUT
+            # FORCE MP4
             "merge_output_format": "mp4",
 
             # AUTO CONVERT TO MP4
@@ -167,7 +192,7 @@ def download():
             # KEEP TEMP FILES
             "nopart": False,
 
-            # SHOW TERMINAL LOGS
+            # SHOW LOGS
             "quiet": False,
         }
 
