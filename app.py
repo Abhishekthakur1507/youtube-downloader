@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(
 
 DOWNLOAD_FOLDER = "/tmp/downloads"
 
-# CREATE DOWNLOADS FOLDER
+# CREATE DOWNLOAD FOLDER
 
 os.makedirs(
     DOWNLOAD_FOLDER,
@@ -102,8 +102,23 @@ def download():
             # VIDEO QUALITY
             "format": selected_format,
 
-            # YOUTUBE LOGIN COOKIES
+            # YOUTUBE COOKIES
             "cookiefile": "cookies.txt",
+
+            # BETTER RENDER COMPATIBILITY
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0"
+            },
+
+            # BETTER YOUTUBE EXTRACTION
+            "extractor_args": {
+                "youtube": {
+                    "player_client": [
+                        "android",
+                        "web"
+                    ]
+                }
+            },
 
             # SAFE WINDOWS FILENAMES
             "windowsfilenames": True,
@@ -135,8 +150,14 @@ def download():
 
             "socket_timeout": 120,
 
-            # FASTER DOWNLOADS
-            "concurrent_fragment_downloads": 8,
+            # REDUCE BOT DETECTION
+            "concurrent_fragment_downloads": 1,
+
+            "sleep_interval": 2,
+
+            "max_sleep_interval": 5,
+
+            "source_address": "0.0.0.0",
 
             # ENABLE DASH
             "youtube_include_dash_manifest": True,
