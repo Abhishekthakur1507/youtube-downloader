@@ -10,19 +10,9 @@ BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
 
-# ---------------- COOKIES FILE ----------------
-
-COOKIE_FILE = os.path.join(
-    BASE_DIR,
-    "cookies.txt"
-)
-
 # ---------------- DOWNLOAD FOLDER ----------------
 
-DOWNLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    "downloads"
-)
+DOWNLOAD_FOLDER = "/tmp/downloads"
 
 # CREATE DOWNLOADS FOLDER
 
@@ -79,24 +69,24 @@ def download():
 
         quality_map = {
 
-    "360p":
-        "bestvideo*[height<=360]+bestaudio/best[height<=360]/best",
+            "360p":
+                "bestvideo*[height<=360]+bestaudio/best[height<=360]/best",
 
-    "480p":
-        "bestvideo*[height<=480]+bestaudio/best[height<=480]/best",
+            "480p":
+                "bestvideo*[height<=480]+bestaudio/best[height<=480]/best",
 
-    "720p":
-        "bestvideo*[height<=720]+bestaudio/best[height<=720]/best",
+            "720p":
+                "bestvideo*[height<=720]+bestaudio/best[height<=720]/best",
 
-    "1080p":
-        "bestvideo*[height<=1080]+bestaudio/best[height<=1080]/best",
+            "1080p":
+                "bestvideo*[height<=1080]+bestaudio/best[height<=1080]/best",
 
-    "1440p":
-        "bestvideo*[height<=1440]+bestaudio/best[height<=1440]/best",
+            "1440p":
+                "bestvideo*[height<=1440]+bestaudio/best[height<=1440]/best",
 
-    "4K":
-        "bestvideo*[height<=2160]+bestaudio/best[height<=2160]/best",
-}
+            "4K":
+                "bestvideo*[height<=2160]+bestaudio/best[height<=2160]/best",
+        }
 
         # ---------------- SELECT FORMAT ----------------
 
@@ -112,10 +102,10 @@ def download():
             # VIDEO QUALITY
             "format": selected_format,
 
-            # USE YOUTUBE COOKIES
-            "cookiefile": COOKIE_FILE,
+            # YOUTUBE LOGIN COOKIES
+            "cookiefile": "cookies.txt",
 
-            # SAFE WINDOWS FILES
+            # SAFE WINDOWS FILENAMES
             "windowsfilenames": True,
 
             "restrictfilenames": True,
@@ -131,6 +121,7 @@ def download():
 
             # AUTO CONVERT TO MP4
             "postprocessors": [{
+
                 "key": "FFmpegVideoConvertor",
                 "preferedformat": "mp4"
             }],
@@ -147,52 +138,16 @@ def download():
             # FASTER DOWNLOADS
             "concurrent_fragment_downloads": 8,
 
-            # ENABLE MORE YOUTUBE FORMATS
-            "extractor_args": {
-                "youtube": {
-                    "player_client": [
-                        "android",
-                        "web",
-                        "tv"
-                    ]
-                }
-            },
-
-            # ENABLE DASH STREAMS
+            # ENABLE DASH
             "youtube_include_dash_manifest": True,
 
             # NO PLAYLIST
             "noplaylist": True,
 
-            # FORCE FORMAT SORTING
-            "format_sort_force": True,
-
-            # SMART FORMAT SORTING
-            "format_sort": [
-
-                # Prefer H264
-                "codec:h264",
-
-                # Higher resolution
-                "res",
-
-                # Better FPS
-                "fps",
-
-                # Better HDR
-                "hdr:12",
-
-                # Better audio
-                "channels"
-            ],
-
-            # PREFER BETTER FORMATS
-            "prefer_free_formats": False,
-
             # KEEP TEMP FILES
             "nopart": False,
 
-            # SHOW LOGS
+            # SHOW TERMINAL LOGS
             "quiet": False,
         }
 
@@ -205,11 +160,9 @@ def download():
                 download=True
             )
 
-            # GET FINAL FILE NAME
+            # FINAL FILE NAME
 
             final_filename = ydl.prepare_filename(info)
-
-            # FORCE MP4 FILE
 
             final_filename = os.path.splitext(
                 final_filename
@@ -243,6 +196,15 @@ def get_file(filename):
         filename
     )
 
+    if not os.path.exists(path):
+
+        return jsonify({
+
+            "status": "error",
+
+            "error": "File not found"
+        })
+
     return send_file(
         path,
         as_attachment=True
@@ -258,5 +220,6 @@ if __name__ == "__main__":
 
     app.run(
         host="0.0.0.0",
-        port=port
+        port=port,
+        debug=True
     )
