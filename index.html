@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>YouTube Downloader</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>YouTube Downloader</h1>
+
+        <input
+            type="text"
+            id="url"
+            placeholder="Paste YouTube URL"
+        >
+
+        <!-- QUALITY SELECTOR -->
+
+        <select id="quality">
+
+            <option value="360p">
+                360p
+            </option>
+
+            <option value="480p">
+                480p
+            </option>
+
+            <option value="720p">
+                720p HD
+            </option>
+
+            <option value="1080p" selected>
+                1080p Full HD
+            </option>
+
+            <option value="1440p">
+                1440p 2K
+            </option>
+
+            <option value="4K">
+                4K Ultra HD
+            </option>
+
+        </select>
+
+        <button onclick="downloadVideo()">
+            Download
+        </button>
+
+        <p id="status"></p>
+
+    </div>
+
+    <script>
+
+        async function downloadVideo() {
+
+            const url =
+                document.getElementById("url").value;
+
+            const quality =
+                document.getElementById("quality").value;
+
+            const status =
+                document.getElementById("status");
+
+            if (!url) {
+
+                status.innerText =
+                    "Please enter URL";
+
+                return;
+            }
+
+            status.innerText =
+                "Downloading Video...";
+
+            try {
+
+                const response = await fetch(
+                    "/download",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            url: url,
+                            quality: quality
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (data.status === "success") {
+
+                    status.innerText =
+                        "Starting Browser Download...";
+
+                    window.location.href =
+                        "/file/" + data.file;
+
+                } else {
+
+                    status.innerText =
+                        data.error;
+                }
+
+            } catch (error) {
+
+                status.innerText =
+                    "Server Error";
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
