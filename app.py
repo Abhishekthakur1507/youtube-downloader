@@ -79,24 +79,24 @@ def download():
 
         quality_map = {
 
-            "360p":
-                "bestvideo*[height<=360]+bestaudio/best[height<=360]",
+    "360p":
+        "bestvideo*[height<=360]+bestaudio/best[height<=360]/best",
 
-            "480p":
-                "bestvideo*[height<=480]+bestaudio/best[height<=480]",
+    "480p":
+        "bestvideo*[height<=480]+bestaudio/best[height<=480]/best",
 
-            "720p":
-                "bestvideo*[height<=720]+bestaudio/best[height<=720]",
+    "720p":
+        "bestvideo*[height<=720]+bestaudio/best[height<=720]/best",
 
-            "1080p":
-                "bestvideo*[height<=1080]+bestaudio/best[height<=1080]",
+    "1080p":
+        "bestvideo*[height<=1080]+bestaudio/best[height<=1080]/best",
 
-            "1440p":
-                "bestvideo*[height<=1440]+bestaudio/best[height<=1440]",
+    "1440p":
+        "bestvideo*[height<=1440]+bestaudio/best[height<=1440]/best",
 
-            "4K":
-                "bestvideo*[height<=2160]+bestaudio/best[height<=2160]",
-        }
+    "4K":
+        "bestvideo*[height<=2160]+bestaudio/best[height<=2160]/best",
+}
 
         # ---------------- SELECT FORMAT ----------------
 
